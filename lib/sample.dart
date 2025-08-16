@@ -1,424 +1,600 @@
 import 'package:flutter/material.dart';
-import 'dart:io';
-import 'package:path/path.dart' as path;
-import 'package:windows_sample/aavak_report_window.dart';
-import 'package:windows_sample/milk_collection_window.dart';
-import 'package:windows_sample/other_window.dart';
-import 'package:windows_sample/theme/app_theme.dart';
+import 'package:windows_sample/model/rate_model.dart';
 
-void main() {
-  runApp(MyApp());
-}
+import '../model/branch_model.dart';
+import '../widget/animated_button_widget.dart';
 
-class MyApp extends StatelessWidget {
+
+
+class BranchMasterWindow extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'File Explorer',
-      ////
-      //// Commented out theme to use AppTheme instead
-      //// AppTheme provides consistent color scheme across the app
-      ////
-      // theme: ThemeData(
-      //   primarySwatch: Colors.blue,
-      //   brightness: Brightness.dark,
-      //   scaffoldBackgroundColor: Color(0xFF2B2B2B),
-      // ),
-      home: FileExplorerPage(),
-    );
-  }
-
-////
-//// Helper method to build individual tab icons
-//// Creates consistent styling and tap handling for each tab
-////
+  _BranchMasterWindowState createState() => _BranchMasterWindowState();
 }
 
-class FileExplorerPage extends StatefulWidget {
-  @override
-  _FileExplorerPageState createState() => _FileExplorerPageState();
-}
+class _BranchMasterWindowState extends State<BranchMasterWindow> {
+  final TextEditingController codeController = TextEditingController();
 
-class _FileExplorerPageState extends State<FileExplorerPage> with TickerProviderStateMixin {
-  Directory? currentDirectory;
-  ////
-  //// Added expansion state tracking for each menu item
-  //// This helps manage which folders are expanded and update arrow directions accordingly
-  ////
-  Map<String, bool> expansionStates = {};
+  final TextEditingController nameController = TextEditingController();
+  bool isVillageSelected = true;
+  bool isPrintChecked = false;
+  String selectedShift = 'सकाळ';
+  List<BranchMaster> branchModelList = [
 
-  ////
-  //// Added AppBar tab functionality similar to WhatsApp
-  //// Tracks selected tab index and manages animated indicator
-  ////
-  int selectedTabIndex = 0;
-  late AnimationController _tabAnimationController;
-  late Animation<double> _tabAnimation;
+    BranchMaster( name: "मुख्य शाखा",rate: 'दर क्र १'),
+    BranchMaster(name: "शाखा क्र २",rate: 'दर क्र २'),
+    BranchMaster(name: "शाखा क्र ३",rate: 'दर क्र ३')];
 
-  Map<String,Map<String,Map<String,StatefulWidget>>> menuMap1 ={
-    'Billing':
-    {'Mahiti Bharane':
-    {'Milk Collection':MilkCollectionWindow()},
-
-      'Reports':
-      {'Aavak Report':AavakReportWindow()},
-      'Other':{'Other':OtherWindow()}
-    },
-
-  };
-
-  Map<String,Map<String,Map<String,StatefulWidget>>> menuMap2 ={
-    'Billing':
-    {'Mahiti Bharane':
-    {'Milk Collection':MilkCollectionWindow()},
-
-      'Reports':
-      {'Aavak Report':AavakReportWindow()},
-      'Other':{'Other':OtherWindow()}
-    },
-
-  };
-
-  Map<String,Map<String,Map<String,StatefulWidget>>> menuMap3 ={
-    'Billing':
-    {'Mahiti Bharane':
-    {'Milk Collection':MilkCollectionWindow()},
-
-      'Reports':
-      {'Aavak Report':AavakReportWindow()},
-      'Other':{'Other':OtherWindow()}
-    },
-
-  };
-  final List<Map<String, dynamic>> services = [
-    {
-      "title": "Collection",
-      "icon": 'assets/milk-can.png',
-      "isImage": true,
-      //"route": MilkCollectionPage(),
-      "color": Colors.lightBlueAccent
-    },
-    {
-      "title": "Milk Sale",
-      "icon": 'assets/milk-box.png',
-      "isImage": true,
-      //   "route": LocalMilkSalePage(),
-      "color": Colors.greenAccent
-    },
-    {
-      "title": "Deduction",
-      "icon": 'assets/rupee.png',
-      "isImage": true,
-      //  "route": DeductionMasterScreen(),
-      "color": Colors.orangeAccent
-    },
-    {
-      "title": "Reports",
-      "icon": 'assets/report.png',
-      "isImage": true,
-      // "route": ReportGenerationPage(),
-      "color": Colors.deepPurpleAccent
-    },
-    {
-      "title": "Customer Master",
-      "icon": 'assets/group.png',
-      "isImage": true,
-      //   "route": CustomerPage(),
-      "color": Color(0xFFA47DAB)
-    },
-    {
-      "title": "Rate Master",
-      "icon": 'assets/rate.png',
-      "isImage": true,
-      //  "route": UpdateRatechart(),
-      "color": Color(0xFFCF6DFC)
-    },
-    {
-      "title": "Cattle Feed",
-      "icon": 'assets/cattlefeed.png',
-      "isImage": true,
-      //  "route": CattleFeedOptions(),
-      "color": Color(0xFF4272FF)
-    },
-    {
-      "title": "Customer History",
-      "icon": 'assets/history.png',
-      "isImage": true,
-      //   "route": SearchCustomerPage(agenda: "Search Customer"),
-      "color": Color(0xFF6B403C)
-    },
-    {
-      "title": "Advance",
-      "icon": 'assets/advance.png',
-      "isImage": true,
-      //    "route": CustomerAdvanceHistory(),
-      "color": Colors.redAccent
-    },
-    {
-      "title": "Advance Organization",
-      "icon": 'assets/advance organization.png',
-      "isImage": true,
-      // "route": OrganizationScreen(),
-      "color": Color(0xFFFFA896)
-    },
-    {
-      "title": "Customer Loan",
-      "icon": 'assets/customer loan.png',
-      "isImage": true,
-
-      // "route": CustomerLoanHistory(),
-      "color": Color(0xFF5C5C99)
-    },
-  ];
-
-  List<String> mainMenuList =  ['Billing','Accounting','Other'];
-  List<String> subMenuList = ['Mahiti Bharane','Reports','Other'];
-  String? selectedFilePath;
-  String fileContent = '';
-  bool isLoading = false;
-
+  List<RateModel> rateModelList = [RateModel(name:'दर क्र १'),RateModel(name:'दर क्र २'),RateModel(name:'दर क्र ३')];
+  String? selectedRate; // Add this field for dropdown
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    ////
-    //// Initialize animation controller for tab indicator
-    //// Creates smooth transition animation when switching between tabs
-    ////
-    _tabAnimationController = AnimationController(
-      duration: Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _tabAnimation = Tween<double>(begin: 0, end: 1).animate(
-      CurvedAnimation(parent: _tabAnimationController, curve: Curves.easeInOut),
-    );
+    codeController.text = (branchModelList.length + 1 ).toString();
+  }
+  void _clearFields() {
+    codeController.text = (branchModelList.length + 1 ).toString();
+    nameController.clear();
+    selectedRate = null;
+
+
   }
 
-  ////
-  //// Added dispose method to clean up animation controller
-  //// Prevents memory leaks when widget is destroyed
-  ////
-  @override
-  void dispose() {
-    _tabAnimationController.dispose();
-    super.dispose();
-  }
-  Widget _buildTabIcon(int index, IconData icon, String label) {
-    final isSelected = selectedTabIndex == index;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          ////
-          //// Tab selection logic with animation trigger
-          //// Updates selected index and starts indicator animation
-          ////
-          setState(() {
-            selectedTabIndex = index;
-          });
-          _tabAnimationController.forward(from: 0);
-        },
-        child: Container(
-          height: 44,
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          decoration: isSelected
-              ? BoxDecoration(
-            color: Colors.blue[50], // transparent blue
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(8),topRight:Radius.circular(8) ), // rounded corners
-          )
-              : null,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 24,
-                color: isSelected ? Colors.blue : Colors.white,
-              ),
-              SizedBox(height: 2),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: isSelected ? Colors.blue : Colors.white,
-                  fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
-                ),
-              ),
-            ],
-          ),
-        )
-        ,
-      ),
-    );
-  }
+  void _saveBranch() {
+    if (codeController.text.isNotEmpty &&
+        nameController.text.isNotEmpty &&
+        selectedRate != null) {
+      setState(() {
+        branchModelList.add(BranchMaster(
+            name: nameController.text,
+            rate: selectedRate!
+        ));
 
-
-  Widget _buildDirectoryStructure(Map<String, dynamic> menu, {bool isRoot = false, String parentPath = ''}) {
-    final items = menu.entries.map((entry) {
-      final key = entry.key;
-      final value = entry.value;
-      ////
-      //// Create unique path for each item to track expansion state
-      //// This allows proper state management for nested folders
-      ////
-      final currentPath = parentPath.isEmpty ? key : '$parentPath/$key';
-
-      if (value is Map<String, dynamic>) {
-        // Directory - Compact ExpansionTile
-        return Theme(
-          data: Theme.of(context).copyWith(
-            dividerColor: Colors.transparent,
-          ),
-          ////
-          //// Modified ExpansionTile to use tracked expansion states
-          //// Arrow direction now properly updates based on actual expansion state
-          ////
-          child: ExpansionTile(
-            key: Key(currentPath),
-            tilePadding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
-            childrenPadding: EdgeInsets.only(left: 16.0),
-            visualDensity: VisualDensity.compact,
-            dense: true,
-            minTileHeight: 32.0, // Compact height
-            trailing: const SizedBox.shrink(), // remove default arrow
-            ////
-            //// Updated leading widget to use AppTheme colors
-            //// Arrow smoothly rotates from right (collapsed) to down (expanded)
-            ////
-            leading: AnimatedRotation(
-              duration: Duration(milliseconds: 200),
-              turns: (expansionStates[currentPath] ?? false) ? 0.25 : 0.0, // 0.25 = 90 degrees
-              child: Icon(
-                Icons.keyboard_arrow_right,
-                size: 16,
-                color: AppTheme.primaryBlack,
-              ),
-            ),
-            ////
-            //// Enhanced onExpansionChanged to properly track state
-            //// Updates expansion state map for accurate arrow direction
-            ////
-            onExpansionChanged: (expanded) {
-              setState(() {
-                expansionStates[currentPath] = expanded;
-              });
-            },
-            title: Text(
-              key,
-              style: const TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w400,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-            children: [
-              _buildDirectoryStructure(value, isRoot: false, parentPath: currentPath),
-            ],
-          ),
-        );
-      }
-      else if (value is StatefulWidget) {
-        // File - Compact ListTile
-        return ListTile(
-          dense: true,
-          visualDensity: VisualDensity.compact,
-          minTileHeight: 28.0, // Very compact for files
-          contentPadding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
-          ////
-          //// Updated file icon color to match AppTheme
-          //// Uses AppTheme.primaryBlack for consistency
-          ////
-          leading: const Icon(
-              Icons.insert_drive_file,
-              color: Colors.black45,
-              size: 14
-          ),
-          title: Text(
-            key,
-            ////
-            //// Updated text color to use AppTheme
-            //// Maintains readability with theme colors
-            ////
-            style: const TextStyle(
-              fontSize: 10,
-              color: Colors.black,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-          onTap: () {
-            ////
-            //// Enhanced file selection with state management
-            //// Updates right panel content when file is selected
-            ////
-            setState(() {
-              selectedFilePath = key;
-              fileContent = 'Content for $key'; // Replace with actual content loading
-            });
-            print('Opening $key');
-          },
-        );
-      }
-      return const SizedBox();
-    }).toList();
-
-    // Root level uses intrinsic height, child levels are just columns
-    return isRoot
-        ? Column(
-      mainAxisSize: MainAxisSize.min,
-      children: items,
-    )
-        : Column(
-      mainAxisSize: MainAxisSize.min,
-      children: items,
-    );
+        _clearFields();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(100),
-        child: AppBar(
-          backgroundColor: AppTheme.primaryBlue,
-          elevation: 0,
-          leading: IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.ac_unit, color: Colors.white),
-          ),
-          flexibleSpace: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      body: Container(
+        decoration: BoxDecoration(
+            color: Colors.blue[50]
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
             children: [
-              // Top section with title
+              // Modern Header
               Container(
-                height: 56,
-                padding: EdgeInsets.symmetric(horizontal: 16),
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                      offset: Offset(0, 2),
+                    ),
+                  ],
+                ),
                 child: Row(
                   children: [
-                    SizedBox(width: 56), // space for leading icon
-                    Text(
-                      'Binary Solutions',
+                    Icon(Icons.local_drink, color: Colors.white, size: 28),
+                    SizedBox(width: 12),
+                    SelectableText(
+                      'शाखा नावे भरणे',
                       style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
                         color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    Spacer(),
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(Icons.schedule, color: Colors.white, size: 16),
+                          SizedBox(width: 8),
+                          SelectableText(
+                            'दिनांक: १४.०८.२०२५',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-              // Bottom section with tabs
-              Container(
-                height: 44,
+
+              Expanded(
                 child: Row(
                   children: [
-                    for(int i=0;i<services.length;i++)
-                      _buildTabIcon(i, services[i]['icon'], services[i]['title']),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(16),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 10,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(24),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Top Section - Member Selection
+                              Container(
+                                margin: EdgeInsets.all(16),
+                                padding: EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [Color(0xFFF8FAFC), Color(0xFFEBF4FF), Color(0xFFDBEAFE)],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                  borderRadius: BorderRadius.circular(16),
+                                  border: Border.all(color: Color(0xFF93C5FD).withOpacity(0.5), width: 1.5),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xFF1E3A8A).withOpacity(0.08),
+                                      spreadRadius: 0,
+                                      blurRadius: 20,
+                                      offset: Offset(0, 8),
+                                    ),
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.5),
+                                      spreadRadius: 0,
+                                      blurRadius: 1,
+                                      offset: Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // Form Title
+                                    Container(
+                                      margin: EdgeInsets.only(bottom: 20),
+                                      child: Text(
+                                        'शाखा तपशील',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          color: Color(0xFF1E40AF),
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ),
 
-                    _buildTabIcon(0, Icons.chat, 'Chat'),
-                    _buildTabIcon(1, Icons.update, 'Updates'),
-                    _buildTabIcon(2, Icons.groups, 'Communities'),
-                    _buildTabIcon(3, Icons.call, 'Calls'),
-                    _buildTabIcon(4, Icons.settings, 'Settings'),
-                    _buildTabIcon(5, Icons.more_vert, 'More'),
+                                    // Form Fields Row
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // Branch Code Field
+                                        Expanded(
+                                          flex: 2,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.only(bottom: 8),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.qr_code_rounded,
+                                                      size: 16,
+                                                      color: Color(0xFF6B7280),
+                                                    ),
+                                                    SizedBox(width: 6),
+                                                    Text(
+                                                      'शाखेचा कोड',
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: Color(0xFF374151),
+                                                        letterSpacing: 0.2,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                height: 48,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Color(0xFF1E3A8A).withOpacity(0.04),
+                                                      spreadRadius: 0,
+                                                      blurRadius: 8,
+                                                      offset: Offset(0, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: TextField(
+                                                  readOnly: true,
+                                                  controller: codeController,
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Color(0xFFF9FAFB),
+                                                    border: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderSide: BorderSide(color: Color(0xFFE5E7EB), width: 1.5),
+                                                    ),
+                                                    enabledBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderSide: BorderSide(color: Color(0xFFD1D5DB), width: 1.5),
+                                                    ),
+                                                    focusedBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderSide: BorderSide(color: Color(0xFF2563EB), width: 2.5),
+                                                    ),
+                                                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                                    suffixIcon: Container(
+                                                      margin: EdgeInsets.only(right: 8),
+                                                      child: Icon(
+                                                        Icons.lock_outline,
+                                                        color: Color(0xFF9CA3AF),
+                                                        size: 18,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xFF6B7280),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        SizedBox(width: 24),
+
+                                        // Branch Name Field
+                                        Expanded(
+                                          flex: 5,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.only(bottom: 8),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.business_rounded,
+                                                      size: 16,
+                                                      color: Color(0xFF6B7280),
+                                                    ),
+                                                    SizedBox(width: 6),
+                                                    Text(
+                                                      'शाखेचे नाव',
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: Color(0xFF374151),
+                                                        letterSpacing: 0.2,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      ' *',
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: Color(0xFFDC2626),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                height: 48,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Color(0xFF1E3A8A).withOpacity(0.04),
+                                                      spreadRadius: 0,
+                                                      blurRadius: 8,
+                                                      offset: Offset(0, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: TextField(
+                                                  controller: nameController,
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Colors.white,
+                                                    hintText: 'शाखेचे नाव प्रविष्ट करा',
+                                                    hintStyle: TextStyle(
+                                                      color: Color(0xFF9CA3AF),
+                                                      fontSize: 14,
+                                                    ),
+                                                    border: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderSide: BorderSide(color: Color(0xFFE5E7EB), width: 1.5),
+                                                    ),
+                                                    enabledBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderSide: BorderSide(color: Color(0xFFD1D5DB), width: 1.5),
+                                                    ),
+                                                    focusedBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderSide: BorderSide(color: Color(0xFF2563EB), width: 2.5),
+                                                    ),
+                                                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                                  ),
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xFF111827),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        SizedBox(width: 24),
+
+                                        // Rate Dropdown Field
+                                        Expanded(
+                                          flex: 2,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Container(
+                                                margin: EdgeInsets.only(bottom: 8),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons.percent_rounded,
+                                                      size: 16,
+                                                      color: Color(0xFF6B7280),
+                                                    ),
+                                                    SizedBox(width: 6),
+                                                    Text(
+                                                      'दर',
+                                                      style: TextStyle(
+                                                        fontSize: 13,
+                                                        fontWeight: FontWeight.w600,
+                                                        color: Color(0xFF374151),
+                                                        letterSpacing: 0.2,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Container(
+                                                height: 48,
+                                                decoration: BoxDecoration(
+                                                  borderRadius: BorderRadius.circular(12),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Color(0xFF1E3A8A).withOpacity(0.04),
+                                                      spreadRadius: 0,
+                                                      blurRadius: 8,
+                                                      offset: Offset(0, 2),
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: DropdownButtonFormField<String>(
+                                                  value: selectedRate,
+                                                  decoration: InputDecoration(
+                                                    filled: true,
+                                                    fillColor: Colors.white,
+                                                    border: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderSide: BorderSide(color: Color(0xFFE5E7EB), width: 1.5),
+                                                    ),
+                                                    enabledBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderSide: BorderSide(color: Color(0xFFD1D5DB), width: 1.5),
+                                                    ),
+                                                    focusedBorder: OutlineInputBorder(
+                                                      borderRadius: BorderRadius.circular(12),
+                                                      borderSide: BorderSide(color: Color(0xFF2563EB), width: 2.5),
+                                                    ),
+                                                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                                  ),
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Color(0xFF111827),
+                                                  ),
+                                                  dropdownColor: Colors.white,
+                                                  icon: Icon(
+                                                    Icons.keyboard_arrow_down_rounded,
+                                                    color: Color(0xFF6B7280),
+                                                  ),
+                                                  items: rateModelList.map((rate) {
+                                                    return DropdownMenuItem(
+                                                      value: rate.name,
+                                                      child: Text(
+                                                        rate.name,
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }).toList(),
+                                                  onChanged: (value) {
+                                                    setState(() {
+                                                      selectedRate = value;
+                                                    });
+                                                  },
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    SizedBox(height: 28),
+
+                                    // Action Buttons Row
+                                    Row(
+                                      children: [
+                                        // Save Button
+                                        AnimatedSaveButton(
+                                          onPressed: _saveBranch,
+                                        ),
+                                        SizedBox(width: 16),
+
+                                        // Clear Button
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            gradient: LinearGradient(
+                                              colors: [Color(0xFFF3F4F6), Color(0xFFE5E7EB)],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ),
+                                            borderRadius: BorderRadius.circular(12),
+                                            border: Border.all(color: Color(0xFFD1D5DB), width: 1.5),
+                                          ),
+                                          child: ElevatedButton(
+                                            onPressed: _clearFields,
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Colors.transparent,
+                                              shadowColor: Colors.transparent,
+                                              padding: EdgeInsets.symmetric(horizontal: 32, vertical: 14),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                            ),
+                                            child: Row(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Icon(
+                                                  Icons.clear_rounded,
+                                                  size: 18,
+                                                  color: Color(0xFF6B7280),
+                                                ),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  'Clear',
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xFF374151),
+                                                    letterSpacing: 0.3,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 24),
+
+                              // // Data Table
+                              // Expanded(
+                              //   child: Container(
+                              //     decoration: BoxDecoration(
+                              //       color: Colors.white,
+                              //       borderRadius: BorderRadius.circular(12),
+                              //       border: Border.all(color: Color(0xFFE5E7EB)),
+                              //       boxShadow: [
+                              //         BoxShadow(
+                              //           color: Colors.black,
+                              //           blurRadius: 4,
+                              //           offset: Offset(0, 2),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //     child: Column(
+                              //       children: [
+                              //         Container(
+                              //           height: 50,
+                              //           decoration: BoxDecoration(
+                              //             gradient: LinearGradient(
+                              //               colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
+                              //             ),
+                              //             borderRadius: BorderRadius.only(
+                              //               topLeft: Radius.circular(12),
+                              //               topRight: Radius.circular(12),
+                              //             ),
+                              //           ),
+                              //           child: Row(
+                              //             children: [
+                              //               _buildTableHeader('कोड'),
+                              //               _buildTableHeader('उत्पादकाचे नाव'),
+                              //               _buildTableHeader('दर'),
+                              //             ],
+                              //           ),
+                              //         ),
+                              //         Expanded(
+                              //           child: SingleChildScrollView(
+                              //             child: Column(
+                              //               children: [
+                              //                 // Table content
+                              //                 ...branchModelList.map((branch) => Container(
+                              //                   decoration: BoxDecoration(
+                              //                     border: Border(bottom: BorderSide(color: Colors.grey[200]!)),
+                              //                   ),
+                              //                   child: Row(
+                              //                     children: [
+                              //                       Expanded(
+                              //                         child: Padding(
+                              //                           padding: EdgeInsets.all(8),
+                              //                           child: Text((branchModelList.indexOf(branch) + 1).toString()),
+                              //                         ),
+                              //                       ),
+                              //                       Expanded(
+                              //                         child: Padding(
+                              //                           padding: EdgeInsets.all(8),
+                              //                           child: Text(branch.name),
+                              //                         ),
+                              //                       ),
+                              //                       Expanded(
+                              //                         child: Padding(
+                              //                           padding: EdgeInsets.all(8),
+                              //                           child: Text(branch.rate),
+                              //                         ),
+                              //                       ),
+                              //                     ],
+                              //                   ),
+                              //                 )).toList(),
+                              //               ],
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ),
+                              _buildTable()
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
                   ],
                 ),
               ),
@@ -426,135 +602,34 @@ class _FileExplorerPageState extends State<FileExplorerPage> with TickerProvider
           ),
         ),
       ),
-      body: Row(
+    );
+  }
+
+  Widget _buildInputField(String label, TextEditingController controller, IconData icon) {
+    return SelectionArea(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Left sidebar - File tree with flexible width
+          SelectableText(label, style: TextStyle(fontSize: 12, color: Colors.grey[600], fontWeight: FontWeight.w500)),
+          SizedBox(height: 4),
           Container(
-            width: 280, // Slightly reduced width for compactness
-            height: double.infinity,
-            ////
-            //// Updated container styling to use AppTheme colors
-            //// Maintains consistency with overall app theme
-            ////
-            decoration: BoxDecoration(
-              color: AppTheme.backgroundSecondary,
-              border: Border(right: BorderSide(color: Colors.black)),
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ////
-                  //// Removed section headers for cleaner look
-                  //// Direct menu structure without additional labels
-                  ////
-                  _buildDirectoryStructure(menuMap1, isRoot: true, parentPath: 'section1'),
-
-                  SizedBox(height: 8),
-
-                  _buildDirectoryStructure(menuMap2, isRoot: true, parentPath: 'section2'),
-
-                  SizedBox(height: 8),
-
-                  _buildDirectoryStructure(menuMap3, isRoot: true, parentPath: 'section3'),
-
-                  SizedBox(height: 16), // Bottom padding
-                ],
-              ),
-            ),
-          ),
-
-          // Right side - File content viewer
-          Expanded(
-            child: Container(
-              ////
-              //// Updated right panel to use AppTheme background
-              //// Consistent color scheme throughout the interface
-              ////
-              color: AppTheme.backgroundSecondary,
-              child: selectedFilePath != null
-                  ? Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // File header
-                  Container(
-                    padding: EdgeInsets.all(12),
-                    ////
-                    //// Updated file header styling with AppTheme colors
-                    //// Maintains visual consistency with theme
-                    ////
-                    decoration: BoxDecoration(
-                      color: AppTheme.backgroundSecondary,
-                      border: Border(bottom: BorderSide(color: Colors.black)),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.insert_drive_file,
-                          size: 16,
-                          color: AppTheme.primaryBlack,
-                        ),
-                        SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            selectedFilePath!,
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // File content
-                  Expanded(
-                    child: isLoading
-                        ? Center(child: CircularProgressIndicator())
-                        : SingleChildScrollView(
-                      padding: EdgeInsets.all(16),
-                      child: SelectableText(
-                        fileContent,
-                        ////
-                        //// Updated text styling to use AppTheme colors
-                        //// Ensures proper readability with theme
-                        ////
-                        style: TextStyle(
-                          fontFamily: 'monospace',
-                          fontSize: 12,
-                          color: AppTheme.textPrimary,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              )
-                  : Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ////
-                    //// Updated empty state styling with theme colors
-                    //// Better visual integration with overall design
-                    ////
-                    Icon(
-                      Icons.description,
-                      size: 64,
-                      color: Colors.blueAccent,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Select a file to view its contents',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
+            width: 100,
+            height: 45,
+            child: TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                prefixIcon: Icon(icon, size: 18, color: Color(0xFF6B7280)),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Color(0xFFD1D5DB)),
                 ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide(color: Color(0xFF2563EB), width: 2),
+                ),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
             ),
           ),
@@ -562,4 +637,210 @@ class _FileExplorerPageState extends State<FileExplorerPage> with TickerProvider
       ),
     );
   }
+
+  Widget _buildActionButton(String text, IconData icon, Color color) {
+    return Container(
+      height: 45,
+      child: ElevatedButton.icon(
+        onPressed: () {},
+        icon: Icon(icon, size: 18),
+        label: SelectableText(text, style: TextStyle(fontWeight: FontWeight.w600)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          elevation: 2,
+        ),
+      ),
+    );
+  }
+  // Widget _buildTable(){
+  //  return SingleChildScrollView(
+  //     scrollDirection: Axis.horizontal,
+  //     child: Padding(
+  //       padding: const EdgeInsets.all(8.0),
+  //       child: DataTable(
+  //         columnSpacing: 8,
+  //         headingRowHeight: 45,
+  //         border: TableBorder.all(),
+  //         headingRowColor: WidgetStateProperty.all(Color(0xFF24A1DE)),
+  //         columns: [
+  //           DataColumn(label: Text("Code",style: TextStyle(color: Colors.white),)),
+  //           DataColumn(label: Text("Name",style: TextStyle(color: Colors.white),)),
+  //           DataColumn(label: Text("Rate",style: TextStyle(color: Colors.white),)),
+  //         ],
+  //         rows: List.generate(
+  //           branchModelList.length,
+  //               (index) {
+  //             final entry = branchModelList[index];
+  //             return DataRow(
+  //               color: WidgetStateProperty.resolveWith<Color?>(
+  //                     (Set<WidgetState> states) {
+  //                   return Colors.white; // white background
+  //                 },
+  //               ),
+  //               cells: [
+  //                 DataCell(Text(entry.code.toString())),
+  //                 DataCell(Text(entry.name)),
+  //                 DataCell(Text(entry.rate)),
+  //
+  //               ],
+  //
+  //             );
+  //           },
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  //
+  // }
+  Widget _buildTable() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Container(
+        margin: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              spreadRadius: 2,
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: DataTable(
+            columnSpacing: 16,
+            headingRowHeight: 50,
+            dataRowMinHeight: 48,
+            dataRowMaxHeight: 48,
+            border: TableBorder.all(
+              color: Colors.grey.shade300,
+              width: 0.5,
+            ),
+            headingRowColor: WidgetStateProperty.all(Colors.transparent),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Color(0xFF1E3A8A), Color(0xFF2563EB)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+            columns: [
+              DataColumn(
+                label: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    "Code",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    "Name",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+              DataColumn(
+                label: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    "Rate",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            rows: List.generate(
+              branchModelList.length,
+                  (index) {
+                final entry = branchModelList[index];
+                final isEven = index % 2 == 0;
+
+                return DataRow(
+                  color: WidgetStateProperty.resolveWith<Color?>(
+                        (Set<WidgetState> states) {
+                      if (states.contains(WidgetState.hovered)) {
+                        return Color(0xFF3B82F6).withOpacity(0.1);
+                      }
+                      return isEven
+                          ? Colors.white
+                          : Color(0xFFF8FAFC); // Alternating row colors
+                    },
+                  ),
+                  cells: [
+                    DataCell(
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                        child: Text(
+                          entry.code.toString(),
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF374151),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DataCell(
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                        child: Text(
+                          entry.name,
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF374151),
+                          ),
+                        ),
+                      ),
+                    ),
+                    DataCell(
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 12),
+
+                          child: Text(
+                            entry.rate,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF374151),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
 }
