@@ -1,10 +1,13 @@
 import 'dart:io';
-import 'package:windows_sample/aavak_report_window.dart';
-import 'package:windows_sample/milk_collection_window.dart';
-import 'package:windows_sample/other_window.dart';
+import 'package:windows_sample/windows/milk_collection_window.dart';
+import 'package:windows_sample/windows/other_window.dart';
 import 'package:windows_sample/theme/app_theme.dart';
 import 'package:flutter/material.dart';
+import 'package:windows_sample/windows/aavak_report_window.dart';
+import 'package:windows_sample/windows/bank_master_window.dart';
 import 'package:windows_sample/windows/branch_master_window.dart';
+import 'package:windows_sample/windows/customer_master_window.dart';
+import 'package:windows_sample/windows/rate_setup_window.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -23,14 +26,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     'बिलिंग सिस्टीम':
     {'माहिती भरणे':
     {'दुध संकलन':MilkCollectionWindow(),
-      'शाखा नावे भरणे':BranchMasterWindow()},
+      'शाखा नावे भरणे':BranchMasterWindow() ,
+      'बँक माहिती भरणे':BankMasterWindow(),
+      'उत्पादकाची माहिती भरणे':CustomerMasterWindow()},
 
       'रिपोर्ट्स':
-      {'आवक रेपोर्ट':AavakReportWindow()},
-      'इतर':{'इतर':OtherWindow()}
+      {'आवकदुध रिपोर्ट':AavakReportWindow()},
+      'इतर':{'दर सेटप':RateSetupWindow()}
     },
   };
-  
+
   Map<String,Map<String,Map<String,StatefulWidget>>> accountingMenu ={
     'अक्कौटिंग सिस्टीम':
     {'माहिती भरणे':
@@ -38,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
       'रिपोर्ट्स':
       {'आवक रेपोर्ट':AavakReportWindow()},
-      'इतर':{'इतर':OtherWindow()}
+
     },
   };
 
@@ -117,10 +122,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       parent: _sidebarAnimationController,
       curve: Curves.easeOutCubic,
     ));
-    
+
     _sidebarAnimationController.forward();
   }
-  
+
   @override
   void dispose() {
     _tabAnimationController.dispose();
@@ -131,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   Widget _buildTabIcon(int index, String icon, String label) {
     final isSelected = selectedTabIndex == index;
     final service = services[index];
-    
+
     return Expanded(
       child: AnimatedContainer(
         duration: Duration(milliseconds: 300),
@@ -148,26 +153,26 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             height: 60,
             margin: EdgeInsets.symmetric(horizontal: 2),
             decoration: BoxDecoration(
-              gradient: isSelected 
+              gradient: isSelected
                   ? LinearGradient(
-                      colors: [
-                        Colors.white,
-                        Color(0xFFF8FAFC),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    )
+                colors: [
+                  Colors.white,
+                  Color(0xFFF8FAFC),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              )
                   : null,
               borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-              boxShadow: isSelected 
+              boxShadow: isSelected
                   ? [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        spreadRadius: 0,
-                        blurRadius: 8,
-                        offset: Offset(0, -2),
-                      ),
-                    ]
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  spreadRadius: 0,
+                  blurRadius: 8,
+                  offset: Offset(0, -2),
+                ),
+              ]
                   : null,
             ),
             child: Column(
@@ -176,24 +181,24 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 Container(
                   padding: EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    gradient: isSelected 
+                    gradient: isSelected
                         ? LinearGradient(
-                            colors: service['gradient'],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          )
+                      colors: service['gradient'],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
                         : null,
                     color: isSelected ? null : Colors.white.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(12),
-                    boxShadow: isSelected 
+                    boxShadow: isSelected
                         ? [
-                            BoxShadow(
-                              color: service['color'].withOpacity(0.3),
-                              spreadRadius: 0,
-                              blurRadius: 8,
-                              offset: Offset(0, 2),
-                            ),
-                          ]
+                      BoxShadow(
+                        color: service['color'].withOpacity(0.3),
+                        spreadRadius: 0,
+                        blurRadius: 8,
+                        offset: Offset(0, 2),
+                      ),
+                    ]
                         : null,
                   ),
                   child: Image.asset(
@@ -244,8 +249,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
-                  color: (expansionStates[currentPath] ?? false) 
-                      ? Color(0xFF3B82F6).withOpacity(0.2) 
+                  color: (expansionStates[currentPath] ?? false)
+                      ? Color(0xFF3B82F6).withOpacity(0.2)
                       : Colors.transparent,
                 ),
               ),
@@ -263,16 +268,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   child: Container(
                     padding: EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: (expansionStates[currentPath] ?? false) 
-                          ? Color(0xFF3B82F6).withOpacity(0.1) 
+                      color: (expansionStates[currentPath] ?? false)
+                          ? Color(0xFF3B82F6).withOpacity(0.1)
                           : Colors.grey.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Icon(
                       Icons.keyboard_arrow_right,
                       size: 16,
-                      color: (expansionStates[currentPath] ?? false) 
-                          ? Color(0xFF3B82F6) 
+                      color: (expansionStates[currentPath] ?? false)
+                          ? Color(0xFF3B82F6)
                           : Color(0xFF6B7280),
                     ),
                   ),
@@ -311,8 +316,8 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           margin: EdgeInsets.symmetric(vertical: 1),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
-            color: selectedFilePath == key 
-                ? Color(0xFF3B82F6).withOpacity(0.1) 
+            color: selectedFilePath == key
+                ? Color(0xFF3B82F6).withOpacity(0.1)
                 : Colors.transparent,
           ),
           child: ListTile(
@@ -529,7 +534,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         ],
                       ),
                     ),
-                    
+
                     // Scrollable menu content
                     Expanded(
                       child: SingleChildScrollView(
@@ -553,83 +558,83 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
             // Enhanced Right side content
             Expanded(
-              child: selectedWidget != null 
+              child: selectedWidget != null
                   ? Container(
-                      margin: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            spreadRadius: 0,
-                            blurRadius: 20,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: selectedWidget!,
-                      ),
-                    )
+                margin: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      spreadRadius: 0,
+                      blurRadius: 20,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: selectedWidget!,
+                ),
+              )
                   : Container(
-                      margin: EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            spreadRadius: 0,
-                            blurRadius: 20,
-                            offset: Offset(0, 4),
+                margin: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.05),
+                      spreadRadius: 0,
+                      blurRadius: 20,
+                      offset: Offset(0, 4),
+                    ),
+                  ],
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [Color(0xFF3B82F6).withOpacity(0.1), Color(0xFF1E40AF).withOpacity(0.05)],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
-                        ],
-                      ),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [Color(0xFF3B82F6).withOpacity(0.1), Color(0xFF1E40AF).withOpacity(0.05)],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Icon(
-                                Icons.touch_app_rounded,
-                                size: 80,
-                                color: Color(0xFF3B82F6),
-                              ),
-                            ),
-                            SizedBox(height: 24),
-                            Text(
-                              'मेनू मधून पर्याय निवडा',
-                              style: TextStyle(
-                                color: Color(0xFF1F2937),
-                                fontSize: 20,
-                                fontWeight: FontWeight.w600,
-                                letterSpacing: 0.3,
-                              ),
-                            ),
-                            SizedBox(height: 8),
-                            Text(
-                              'कृपया डाव्या बाजूच्या मेनू मधून तुमचा पर्याय निवडा',
-                              style: TextStyle(
-                                color: Color(0xFF6B7280),
-                                fontSize: 14,
-                                letterSpacing: 0.2,
-                              ),
-                            ),
-                          ],
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Icon(
+                          Icons.touch_app_rounded,
+                          size: 80,
+                          color: Color(0xFF3B82F6),
                         ),
                       ),
-                    ),
+                      SizedBox(height: 24),
+                      Text(
+                        'मेनू मधून पर्याय निवडा',
+                        style: TextStyle(
+                          color: Color(0xFF1F2937),
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      SizedBox(height: 8),
+                      Text(
+                        'कृपया डाव्या बाजूच्या मेनू मधून तुमचा पर्याय निवडा',
+                        style: TextStyle(
+                          color: Color(0xFF6B7280),
+                          fontSize: 14,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),

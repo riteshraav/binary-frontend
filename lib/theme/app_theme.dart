@@ -81,21 +81,21 @@ class AppTheme {
         elevation: 8,
       ),
       
-      // Tab bar theme
-      tabBarTheme: const TabBarTheme(
-        labelColor: primaryWhite,
-        unselectedLabelColor: primaryWhite,
-        indicatorColor: primaryBlue,
-      ),
+      // // Tab bar theme
+      // tabBarTheme: const TabBarTheme(
+      //   labelColor: primaryWhite,
+      //   unselectedLabelColor: primaryWhite,
+      //   indicatorColor: primaryBlue,
+      // ),
       
       // Card theme
-      cardTheme: CardTheme(
-        color: primaryWhite,
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
+      // cardTheme: CardTheme(
+      //   color: primaryWhite,
+      //   elevation: 2,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(12),
+      //   ),
+      // ),
       
       // Button themes
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -252,13 +252,13 @@ class AppTheme {
       ),
       
       // Dialog theme
-      dialogTheme: DialogTheme(
-        backgroundColor: primaryWhite,
-        elevation: 24,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
+      // dialogTheme: DialogTheme(
+      //   backgroundColor: primaryWhite,
+      //   elevation: 24,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(16),
+      //   ),
+      // ),
       
       // Snackbar theme
       snackBarTheme: SnackBarThemeData(
@@ -404,20 +404,20 @@ class AppTheme {
       ),
       
       // Tab bar theme
-      tabBarTheme: const TabBarTheme(
-        labelColor: primaryWhite,
-        unselectedLabelColor: textLight,
-        indicatorColor: primaryBlue,
-      ),
+      // tabBarTheme: const TabBarTheme(
+      //   labelColor: primaryWhite,
+      //   unselectedLabelColor: textLight,
+      //   indicatorColor: primaryBlue,
+      // ),
       
       // Card theme
-      cardTheme: CardTheme(
-        color: backgroundDark,
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-      ),
+      // cardTheme: CardTheme(
+      //   color: backgroundDark,
+      //   elevation: 2,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(12),
+      //   ),
+      // ),
       
       // Button themes
       elevatedButtonTheme: ElevatedButtonThemeData(
@@ -574,13 +574,13 @@ class AppTheme {
       ),
       
       // Dialog theme
-      dialogTheme: DialogTheme(
-        backgroundColor: backgroundDark,
-        elevation: 24,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
+      // dialogTheme: DialogTheme(
+      //   backgroundColor: backgroundDark,
+      //   elevation: 24,
+      //   shape: RoundedRectangleBorder(
+      //     borderRadius: BorderRadius.circular(16),
+      //   ),
+      // ),
       
       // Snackbar theme
       snackBarTheme: SnackBarThemeData(

@@ -6,11 +6,9 @@ import '../repository/branch_master_repository.dart';
 class BranchMasterIsarRepository implements IBranchMasterRepository {
   late final Isar _isar;
 
-  BranchMasterIsarRepository._(this._isar);
+  BranchMasterIsarRepository(this._isar);
 
-  static BranchMasterIsarRepository create(Isar isarInstance) {
-    return BranchMasterIsarRepository._(isarInstance);
-  }
+
 
 
   @override

@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class AnimatedSaveButton extends StatefulWidget {
   final VoidCallback onPressed;
+  final FocusNode focusNode;
 
-  const AnimatedSaveButton({Key? key, required this.onPressed}) : super(key: key);
+  const AnimatedSaveButton({Key? key, required this.onPressed,required this.focusNode}) : super(key: key);
 
   @override
   _AnimatedSaveButtonState createState() => _AnimatedSaveButtonState();
@@ -128,6 +129,7 @@ class _AnimatedSaveButtonState extends State<AnimatedSaveButton>
             onTapDown: _onTapDown,
             onTapUp: _onTapUp,
             onTapCancel: _onTapCancel,
+
             child: Transform.scale(
               scale: _isPressed
                   ? _scaleAnimation.value * 0.95  // Slightly smaller when pressed
@@ -166,6 +168,7 @@ class _AnimatedSaveButtonState extends State<AnimatedSaveButton>
                 child: Material(
                   color: Colors.transparent,
                   child: InkWell(
+                    focusNode: widget.focusNode,
                     onTap: widget.onPressed,
                     borderRadius: BorderRadius.circular(12),
                     splashColor: Colors.white.withOpacity(0.1),
