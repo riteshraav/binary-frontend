@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class AnimatedSaveButton extends StatefulWidget {
   final VoidCallback onPressed;
   final FocusNode focusNode;
-
-  const AnimatedSaveButton({Key? key, required this.onPressed,required this.focusNode}) : super(key: key);
+   bool isLoading ;
+   AnimatedSaveButton({Key? key, required this.onPressed,required this.focusNode,this.isLoading = false}) : super(key: key);
 
   @override
   _AnimatedSaveButtonState createState() => _AnimatedSaveButtonState();
@@ -198,7 +198,7 @@ class _AnimatedSaveButtonState extends State<AnimatedSaveButton>
                               color: Colors.white,
                               letterSpacing: _isHovered ? 0.4 : 0.3,
                             ),
-                            child: Text('Save'),
+                            child: widget.isLoading?CircularProgressIndicator(): Text('Save'),
                           ),
                         ],
                       ),

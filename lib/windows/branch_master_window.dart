@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:windows_sample/model/rate_group.dart';
 import 'package:windows_sample/model/rate_model.dart';
 import '../model/branch_model.dart';
 import '../riverpod/providers.dart';
@@ -23,7 +24,7 @@ class _BranchMasterWindowState extends ConsumerState<BranchMasterWindow> {
 
  late List<BranchMaster> branchModelList ;
 
-  List<RateModel> rateModelList = [RateModel(name:'दर क्र १'),RateModel(name:'दर क्र २'),RateModel(name:'दर क्र ३')];
+  List<RateGroup> rateGroupList = [RateGroup(name:'दर क्र १'),RateGroup(name:'दर क्र २'),RateGroup(name:'दर क्र ३')];
   bool isLoading = true;
   FocusNode _marathiFocusNode = FocusNode();
 
@@ -486,7 +487,7 @@ class _BranchMasterWindowState extends ConsumerState<BranchMasterWindow> {
                                           ),
                                           dropdownColor: Colors.white,
                                           icon: Icon(Icons.keyboard_arrow_down_rounded, color: Color(0xFF6B7280)),
-                                          items: rateModelList.map((rate) {
+                                          items: rateGroupList.map((rate) {
                                             return DropdownMenuItem(
                                               value: rate.name,
                                               child: Text(

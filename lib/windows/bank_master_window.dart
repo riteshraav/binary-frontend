@@ -1,13 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 import 'package:intl/intl.dart';
 import 'dart:developer';
-import 'package:windows_sample/isar_repository/branch_master_isar_repository.dart';
 import 'package:windows_sample/model/bank_model.dart';
-import 'package:windows_sample/model/rate_model.dart';
-import '../model/branch_model.dart';
 import '../riverpod/providers.dart';
 import '../widget/animated_button_widget.dart';
 import 'package:flutter/services.dart';

@@ -46,6 +46,14 @@ dependencies:
   devlipi: ^0.0.4
   msix: ^3.16.12
   google_fonts: ^6.3.0
+  file_picker: ^10.3.2
+  excel: ^4.0.6
+  file_selector: ^1.0.3
+  syncfusion_flutter_datagrid: ^31.1.17
+  fluttertoast: ^8.2.12
+  oktoast: ^3.4.0
+  pdf: ^3.11.3
+  open_filex: ^4.7.0
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +82,8 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
      - assets/
+     - assets/data/
+     - assets/font/
 msix_config:
   display_name: Binary
   publisher_display_name: New Binary Solution

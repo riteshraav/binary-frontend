@@ -1,22 +1,31 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
 import 'package:windows_sample/riverpod/providers.dart';
 import 'package:windows_sample/windows/home_window.dart';
+import 'package:oktoast/oktoast.dart'; // ✅ add this
 
-import 'model/branch_model.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final container = await initIsar();
 
-  runApp(UncontrolledProviderScope(
-    container: container,
-    child:  MyApp(),
-  ));
+  runApp(
+    UncontrolledProviderScope(
+      container: container,
+      child: OKToast(  // ✅ Wrap MyApp inside OKToast
+        child: MyApp(),
+        position: ToastPosition.bottom, // default toast position
+        backgroundColor: Colors.black87,
+        radius: 8.0,
+        textStyle: const TextStyle(fontSize: 16, color: Colors.white),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,6 +34,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'File Explorer',
+      navigatorKey: navigatorKey, // ✅ Add this line
       home: HomeScreen(),
     );
   }

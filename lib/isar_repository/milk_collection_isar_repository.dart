@@ -19,12 +19,22 @@ class MilkCollectionIsarRepository implements MilkCollectionRepository {
       });
     } on IsarError catch (e) {
       if (e.message.contains('Unique index violated')) {
-        // Rollback already done automatically by Isar
-        // Now show an error to the use
-        // Optionally throw a custom exception or return null
-        return null;
-        throw Exception("Duplicate entry exists for this milk collection!");
+        print("⚠️ Duplicate entry detected for key=${collection.uniqueKey}, updating existing record instead");
+        return await _isar.writeTxn(() async {
+          // Find the existing record with the same uniqueKey
+          final existing = await _isar.milkCollectionModels
+              .filter()
+              .uniqueKeyEqualTo(collection.uniqueKey) // assuming uniqueKey is indexed
+              .findFirst();
 
+          if (existing != null) {
+            // Preserve the same id so Isar overwrites instead of inserting
+            collection.id = existing.id;
+          }
+
+          // Now overwrite (upsert)
+          return await _isar.milkCollectionModels.put(collection);
+        });
       }
       rethrow; // other Isar errors
     }
@@ -61,5 +71,37 @@ class MilkCollectionIsarRepository implements MilkCollectionRepository {
         .dateBetween(from, to)
         .findAll();
   }
+
+  @override
+  Future<List<MilkCollectionModel>> getCollectionsBetweenAndByAdminId(DateTime from, DateTime to, String adminId) async{
+    return await _isar.milkCollectionModels
+        .filter()
+        .adminIdEqualTo(adminId)
+        .dateBetween(from, to)
+        .findAll();
+  }
+
+  @override
+  Future<List<MilkCollectionModel>> getCollectionsBetweenAndByAdminIdAndMilkType(DateTime from, DateTime to, String adminId, int milkType) async{
+    return await _isar.milkCollectionModels
+        .filter()
+        .adminIdEqualTo(adminId)
+        .milkTypeEqualTo(milkType)
+        .dateBetween(from, to)
+        .findAll();
+  }
+
+  @override
+  Future<List<MilkCollectionModel>> getCollectionsBetweenAndByAdminIdAndCustomerAndMilkType(String customerId, int milkType, DateTime from, DateTime to, String adminId) async{
+    return await _isar.milkCollectionModels
+        .filter()
+        .adminIdEqualTo(adminId)
+        .milkTypeEqualTo(milkType)
+        .dateBetween(from, to)
+        .customerIdEqualTo(customerId)
+        .findAll();
+  }
+
+
 
 }

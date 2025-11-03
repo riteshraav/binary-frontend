@@ -23,6 +23,8 @@ class CustomerIsarRepository implements CustomerRepo {
 
   @override
   Future<int> insertCustomer(CustomerMaster customer) async {
+    final insertedId = await isar.writeTxn(() => isar.customerMasters.put(customer));
+    print('insertedid is $insertedId');
     return await isar.writeTxn(() => isar.customerMasters.put(customer));
   }
 

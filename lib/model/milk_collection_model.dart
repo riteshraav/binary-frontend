@@ -5,7 +5,6 @@ part 'milk_collection_model.g.dart';
 @collection
 class MilkCollectionModel {
   Id id = Isar.autoIncrement; // Primary key
-
   late String customerId;
   late String adminId;
   late double fat;
@@ -66,7 +65,7 @@ class MilkCollectionModel {
       'snf': snf,
       'milkType': milkType,
       'time': time,
-      'date': date,
+      'date': date.toIso8601String(),
       'rate': rate,
       'amount': amount,
       'quantity': quantity,
