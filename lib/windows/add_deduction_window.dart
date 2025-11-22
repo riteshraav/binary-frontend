@@ -81,7 +81,7 @@ class _AddDeductionWindowState extends ConsumerState<AddDeductionWindow> {
           }
       }
       print('selected aakarni is $selectedShape');
-      final deduction = Deduction(name: nameController.text, code: codeController.text, vasuliType: selectedType!, aakarani: selectedShape!, rate: double.parse(rateController.text), priority: int.parse(priorityController.text), rounding: isRounded, milkat: isMilkat, kapatLock: true);
+      final deduction = Deduction(        adminId: '1', name: nameController.text, code: codeController.text, vasuliType: selectedType!, aakarani: selectedShape!, rate: double.parse(rateController.text), priority: int.parse(priorityController.text), rounding: isRounded, milkat: isMilkat, kapatLock: true);
       deductionService.createDeduction(deduction);
       deductionList.add(deduction);
       setState(() {

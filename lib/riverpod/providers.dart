@@ -9,6 +9,7 @@ import 'package:windows_sample/isar_repository/deduction_isar_repository.dart';
 import 'package:windows_sample/isar_repository/rate_grooup_isar_repository.dart';
 import 'package:windows_sample/isar_repository/rate_master_isar_repository.dart';
 import 'package:windows_sample/model/customer_model.dart';
+import 'package:windows_sample/model/deduction_entry_model.dart';
 import 'package:windows_sample/model/milk_collection_model.dart';
 import 'package:windows_sample/model/opening_balance_model.dart';
 import 'package:windows_sample/model/rate_group.dart';
@@ -107,7 +108,7 @@ final deductionEntryProvider = Provider<DeductionEntryService>((ref) {
 Future<ProviderContainer> initIsar() async {
   final dir = await getApplicationDocumentsDirectory();
   final isar = await Isar.open(
-    [BranchMasterSchema,OpeningBalanceSchema ,BankMasterSchema, CustomerMasterSchema,MilkCollectionModelSchema,RateModelSchema,DailyCollectionDataSchema,RateGroupSchema,DeductionSchema], // Add BankMasterSchema here
+    [BranchMasterSchema,OpeningBalanceSchema ,DeductionEntrySchema,BankMasterSchema, CustomerMasterSchema,MilkCollectionModelSchema,RateModelSchema,DailyCollectionDataSchema,RateGroupSchema,DeductionSchema], // Add BankMasterSchema here
     directory: dir.path,
   );
 
@@ -129,6 +130,7 @@ Future<ProviderContainer> initIsar() async {
   if (existingCount == 0) {
     final List<Deduction> defaultDeductions = [
       Deduction(
+        adminId: '1',
         name: "दूध वाहतूक खर्च",
         code: "1",
         vasuliType: "किलो प्रमाणे",
@@ -140,6 +142,7 @@ Future<ProviderContainer> initIsar() async {
         kapatLock: false,
       ),
       Deduction(
+        adminId: '1',
         name: "संघ सदस्यता शुल्क",
         code: "2",
         vasuliType: "सदस्य प्रमाणे",
@@ -151,6 +154,7 @@ Future<ProviderContainer> initIsar() async {
         kapatLock: false,
       ),
       Deduction(
+        adminId: '1',
         name: "दुध थंडकरण खर्च",
         code: "3",
         vasuliType: "लिटर प्रमाणे",

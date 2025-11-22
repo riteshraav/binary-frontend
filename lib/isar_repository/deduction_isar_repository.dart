@@ -9,7 +9,6 @@ class DeductionRepositoryIsar extends DeductionRepository {
 
   DeductionRepositoryIsar(this._isar);
 
-  @override
   Future<List<Deduction>> getAllDeductions() async {
     try {
       return await _isar.deductions.where().sortByPriority().findAll();

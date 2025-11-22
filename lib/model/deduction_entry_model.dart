@@ -12,6 +12,7 @@ class DeductionEntry {
   late double dedAmount;
   late int milkType;
   late String adminId;
+  late DateTime date;
 
   DeductionEntry({
     required this.customerCode,
@@ -19,6 +20,7 @@ class DeductionEntry {
     required this.dedAmount,
     required this.milkType,
     required this.adminId,
+    required this.date,
   });
 
   // Convert to JSON
@@ -28,6 +30,7 @@ class DeductionEntry {
     'dedAmount': dedAmount,
     'milkType': milkType,
     'adminId': adminId,
+    'date':date,
   };
 
   // Create from JSON
@@ -39,6 +42,7 @@ class DeductionEntry {
       dedAmount: (json['dedAmount'] ?? 0).toDouble(),
       milkType: json['milkType'] ?? 0,
       adminId: json['adminId'] ?? '',
+      date:json['date']
     );
   }
 }

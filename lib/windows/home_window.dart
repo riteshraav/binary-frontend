@@ -5,13 +5,14 @@ import 'package:windows_sample/windows/local_rate_master_window.dart';
 import 'package:windows_sample/windows/milk_collection_window.dart';
 import 'package:windows_sample/windows/other_window.dart';
 import 'package:flutter/material.dart';
-import 'package:windows_sample/windows/aavak_report_window.dart';
+import 'package:windows_sample/windows/reports/aavak_report_window.dart';
 import 'package:windows_sample/windows/bank_master_window.dart';
 import 'package:windows_sample/windows/branch_master_window.dart';
 import 'package:windows_sample/windows/customer_master_window.dart';
 import 'package:windows_sample/windows/pot_khate_nave_bharne_window.dart';
 import 'package:windows_sample/windows/rate_group_window.dart';
 import 'package:windows_sample/windows/rate_setup_window.dart';
+import 'package:windows_sample/windows/reports/bill_printing_window.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -38,7 +39,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         'कपात नोंद करा': AddDeductionWindow(),
         'कपात भरणे': DeductionWindow(),
       },
-      'रिपोर्ट्स': {'आवकदुध रिपोर्ट': AavakReportWindow()},
+      'रिपोर्ट्स': {
+        'आवकदुध रिपोर्ट': AavakReportWindow(),
+        'बिलिंग रिपोर्ट': BillingEntryWindow(),
+      },
       'इतर': {'दर सेटप': RateSetupWindow()},
     },
   };

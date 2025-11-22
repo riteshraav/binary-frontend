@@ -355,7 +355,6 @@ class _RateManagementScreenState extends ConsumerState<RateManagementScreen> {
                         SizedBox(
                           width: 180, // ✅ constrain width
                           child: DropdownButtonFormField<String>(
-
                             initialValue: selectedDarPrakar,
                             decoration: InputDecoration(
                               hintText: "दर संघ निवडा",

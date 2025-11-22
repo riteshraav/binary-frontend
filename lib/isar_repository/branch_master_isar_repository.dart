@@ -1,5 +1,4 @@
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
 import '../model/branch_model.dart';
 import '../repository/branch_master_repository.dart';
 

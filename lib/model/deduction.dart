@@ -19,6 +19,7 @@ class Deduction {
   late bool rounding;
   late bool milkat;
   late bool kapatLock;
+  late String adminId;
 
   // Constructor
   Deduction({
@@ -31,6 +32,7 @@ class Deduction {
     required  this.rounding ,
     required  this.milkat ,
     required  this.kapatLock ,
+    required this.adminId
   }) {
     if (id != null) this.id = id;
   }
@@ -47,6 +49,7 @@ class Deduction {
       rounding: json['rounding'] == true || json['rounding'] == 1 || json['rounding'] == 'true',
       milkat: json['milkat'] == true || json['milkat'] == 1 || json['milkat'] == 'true',
       kapatLock: json['kapatLock'] == true || json['kapatLock'] == 1 || json['kapatLock'] == 'true',
+      adminId: json['adminId']?.toString()??''
     );
   }
 
@@ -62,6 +65,7 @@ class Deduction {
     'rounding': rounding,
     'milkat': milkat,
     'kapatLock': kapatLock,
+    'adminId':adminId
   };
 
   // copyWith
@@ -76,6 +80,7 @@ class Deduction {
     bool? rounding,
     bool? milkat,
     bool? kapatLock,
+    String? adminId
   }) {
     return Deduction(
       name: name ?? this.name,
@@ -87,10 +92,12 @@ class Deduction {
       rounding: rounding ?? this.rounding,
       milkat: milkat ?? this.milkat,
       kapatLock: kapatLock ?? this.kapatLock,
+      adminId: adminId??this.adminId
+
     );
   }
 
   @override
   String toString() =>
-      'Deduction{id:$id, name:$name, code:$code, rate:$rate, priority:$priority, rounding:$rounding, milkat:$milkat, kapatLock:$kapatLock}';
+      'Deduction{id:$id, name:$name, code:$code, rate:$rate, priority:$priority, rounding:$rounding, milkat:$milkat, kapatLock:$kapatLock , adminId:$adminId}';
 }

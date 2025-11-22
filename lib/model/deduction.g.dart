@@ -22,43 +22,48 @@ const DeductionSchema = CollectionSchema(
       name: r'aakarani',
       type: IsarType.string,
     ),
-    r'code': PropertySchema(
+    r'adminId': PropertySchema(
       id: 1,
+      name: r'adminId',
+      type: IsarType.string,
+    ),
+    r'code': PropertySchema(
+      id: 2,
       name: r'code',
       type: IsarType.string,
     ),
     r'kapatLock': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'kapatLock',
       type: IsarType.bool,
     ),
     r'milkat': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'milkat',
       type: IsarType.bool,
     ),
     r'name': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'name',
       type: IsarType.string,
     ),
     r'priority': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'priority',
       type: IsarType.long,
     ),
     r'rate': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'rate',
       type: IsarType.double,
     ),
     r'rounding': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'rounding',
       type: IsarType.bool,
     ),
     r'vasuliType': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'vasuliType',
       type: IsarType.string,
     )
@@ -98,6 +103,7 @@ int _deductionEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.aakarani.length * 3;
+  bytesCount += 3 + object.adminId.length * 3;
   bytesCount += 3 + object.code.length * 3;
   bytesCount += 3 + object.name.length * 3;
   bytesCount += 3 + object.vasuliType.length * 3;
@@ -111,14 +117,15 @@ void _deductionSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.aakarani);
-  writer.writeString(offsets[1], object.code);
-  writer.writeBool(offsets[2], object.kapatLock);
-  writer.writeBool(offsets[3], object.milkat);
-  writer.writeString(offsets[4], object.name);
-  writer.writeLong(offsets[5], object.priority);
-  writer.writeDouble(offsets[6], object.rate);
-  writer.writeBool(offsets[7], object.rounding);
-  writer.writeString(offsets[8], object.vasuliType);
+  writer.writeString(offsets[1], object.adminId);
+  writer.writeString(offsets[2], object.code);
+  writer.writeBool(offsets[3], object.kapatLock);
+  writer.writeBool(offsets[4], object.milkat);
+  writer.writeString(offsets[5], object.name);
+  writer.writeLong(offsets[6], object.priority);
+  writer.writeDouble(offsets[7], object.rate);
+  writer.writeBool(offsets[8], object.rounding);
+  writer.writeString(offsets[9], object.vasuliType);
 }
 
 Deduction _deductionDeserialize(
@@ -129,14 +136,15 @@ Deduction _deductionDeserialize(
 ) {
   final object = Deduction(
     aakarani: reader.readString(offsets[0]),
-    code: reader.readString(offsets[1]),
-    kapatLock: reader.readBool(offsets[2]),
-    milkat: reader.readBool(offsets[3]),
-    name: reader.readString(offsets[4]),
-    priority: reader.readLong(offsets[5]),
-    rate: reader.readDouble(offsets[6]),
-    rounding: reader.readBool(offsets[7]),
-    vasuliType: reader.readString(offsets[8]),
+    adminId: reader.readString(offsets[1]),
+    code: reader.readString(offsets[2]),
+    kapatLock: reader.readBool(offsets[3]),
+    milkat: reader.readBool(offsets[4]),
+    name: reader.readString(offsets[5]),
+    priority: reader.readLong(offsets[6]),
+    rate: reader.readDouble(offsets[7]),
+    rounding: reader.readBool(offsets[8]),
+    vasuliType: reader.readString(offsets[9]),
   );
   object.id = id;
   return object;
@@ -154,18 +162,20 @@ P _deductionDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readBool(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 3:
       return (reader.readBool(offset)) as P;
     case 4:
-      return (reader.readString(offset)) as P;
-    case 5:
-      return (reader.readLong(offset)) as P;
-    case 6:
-      return (reader.readDouble(offset)) as P;
-    case 7:
       return (reader.readBool(offset)) as P;
+    case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
+      return (reader.readLong(offset)) as P;
+    case 7:
+      return (reader.readDouble(offset)) as P;
     case 8:
+      return (reader.readBool(offset)) as P;
+    case 9:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -488,6 +498,137 @@ extension DeductionQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'aakarani',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition> adminIdEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'adminId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition> adminIdGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'adminId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition> adminIdLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'adminId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition> adminIdBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'adminId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition> adminIdStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'adminId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition> adminIdEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'adminId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition> adminIdContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'adminId',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition> adminIdMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'adminId',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition> adminIdIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'adminId',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterFilterCondition>
+      adminIdIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'adminId',
         value: '',
       ));
     });
@@ -1105,6 +1246,18 @@ extension DeductionQuerySortBy on QueryBuilder<Deduction, Deduction, QSortBy> {
     });
   }
 
+  QueryBuilder<Deduction, Deduction, QAfterSortBy> sortByAdminId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'adminId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterSortBy> sortByAdminIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'adminId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Deduction, Deduction, QAfterSortBy> sortByCode() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'code', Sort.asc);
@@ -1213,6 +1366,18 @@ extension DeductionQuerySortThenBy
   QueryBuilder<Deduction, Deduction, QAfterSortBy> thenByAakaraniDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'aakarani', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterSortBy> thenByAdminId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'adminId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Deduction, Deduction, QAfterSortBy> thenByAdminIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'adminId', Sort.desc);
     });
   }
 
@@ -1334,6 +1499,13 @@ extension DeductionQueryWhereDistinct
     });
   }
 
+  QueryBuilder<Deduction, Deduction, QDistinct> distinctByAdminId(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'adminId', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Deduction, Deduction, QDistinct> distinctByCode(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1397,6 +1569,12 @@ extension DeductionQueryProperty
   QueryBuilder<Deduction, String, QQueryOperations> aakaraniProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'aakarani');
+    });
+  }
+
+  QueryBuilder<Deduction, String, QQueryOperations> adminIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'adminId');
     });
   }
 

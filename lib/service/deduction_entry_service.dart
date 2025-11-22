@@ -9,10 +9,9 @@ class DeductionEntryService {
 
   DeductionEntryService(this._repository);
 
-  Future<void> addDeductionFromJson(Map<String, dynamic> json) async {
+  Future<void> addDeductionFromJson(DeductionEntry entry) async {
     try {
-      final entry = DeductionEntry.fromJson(json);
-      log('🧾 Adding Deduction from JSON: $json');
+
       await _repository.addDeduction(entry);
     } catch (e, st) {
       log('❌ Error in addDeductionFromJson: $e', stackTrace: st);

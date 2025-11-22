@@ -3,13 +3,13 @@ import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:windows_sample/model/customer_model.dart';
 import 'package:windows_sample/service/customer_service.dart';
-import '../model/branch_model.dart';
-import '../model/milk_collection_model.dart';
-import '../pdf_generation/aavak_report_generation.dart';
-import '../pdf_generation/pdf_api.dart';
-import '../riverpod/providers.dart';
-import '../service/branch_service.dart';
-import '../service/milk_collection_service.dart';
+import '../../model/branch_model.dart';
+import '../../model/milk_collection_model.dart';
+import '../../pdf_generation/aavak_report_generation.dart';
+import '../../pdf_generation/pdf_api.dart';
+import '../../riverpod/providers.dart';
+import '../../service/branch_service.dart';
+import '../../service/milk_collection_service.dart';
 
 class AavakReportWindow extends ConsumerStatefulWidget {
   const AavakReportWindow({Key? key}) : super(key: key);
