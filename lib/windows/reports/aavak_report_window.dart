@@ -242,8 +242,8 @@ class _AavakReportWindowState extends ConsumerState<AavakReportWindow> {
 
       print(milkCollection.first.date);
       print('customr list lenght is ${customerList.length}');
-      PdfInvoiceApi pdfInvoiceApi =
-      await PdfInvoiceApi.create(milkCollection, "1",customerList);
+      AavakReport pdfInvoiceApi =
+      await AavakReport.create(milkCollection, "1",customerList);
       final pdfFile = await pdfInvoiceApi.generate();
 
       final file = await PdfApi.saveDocument(

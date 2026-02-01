@@ -5,7 +5,6 @@ import 'package:windows_sample/model/milk_collection_model.dart';
 class MilkCollectionApi{
   Future<void> saveMilkCollection(MilkCollectionModel model) async {
     final url = Uri.parse("https://backend-dairy-nefj.onrender.com/api/milk/save");
-    return;
 
     try{
       final response = await http.post(

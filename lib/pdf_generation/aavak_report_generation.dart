@@ -16,7 +16,7 @@ class Combination {
   Map<String, List<MilkCollectionModel>> customerData = {};
 }
 
-class PdfInvoiceApi {
+class AavakReport {
   final List<MilkCollectionModel> milkCollectionList;
   String admin;
   double totalBuffaloQuantity = 0;
@@ -33,16 +33,16 @@ class PdfInvoiceApi {
   double totalQuantity = 0;
   List<CustomerMaster> customers ;
   Font ttf;
-  PdfInvoiceApi._(this.milkCollectionList, this.admin, this.ttf,this.customers);
+  AavakReport._(this.milkCollectionList, this.admin, this.ttf,this.customers);
 
   // Factory constructor for async initialization
-  static Future<PdfInvoiceApi> create(
+  static Future<AavakReport> create(
       List<MilkCollectionModel> milkCollectionList, String admin,List<CustomerMaster> customerList) async {
     final fontData = await rootBundle.load(
         "assets/font/NotoSansDevanagari-VariableFont_wdth,wght.ttf");
     final ttf = pw.Font.ttf(fontData);
 
-    return PdfInvoiceApi._(milkCollectionList, admin, ttf,customerList);
+    return AavakReport._(milkCollectionList, admin, ttf,customerList);
   }
 
   /// Extracts and formats a date.

@@ -2,7 +2,7 @@
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:isar/isar.dart';
+import 'package:isar/isar.dart'; 
 import 'package:path_provider/path_provider.dart';
 import 'package:windows_sample/isar_repository/customer_master_isar_repository.dart';
 import 'package:windows_sample/isar_repository/deduction_isar_repository.dart';
@@ -126,51 +126,13 @@ Future<ProviderContainer> initIsar() async {
   final existingMilkCollection = await isar.milkCollectionModels.count();
   final existingRateGroup = await isar.rateGroups.count();
   final existingCount = await isar.deductions.count();
+  final existingOpeningBalance = await isar.openingBalances.count();
  // importOpeningBalancesFromJson(isar, "assets/data/opening_balance_data.json");
+  if (existingOpeningBalance == 0) {
+    await importOpeningBalancesFromJson(isar, "assets/data/opening_balance_data.json");
+  }
   if (existingCount == 0) {
-    final List<Deduction> defaultDeductions = [
-      Deduction(
-        adminId: '1',
-        name: "दूध वाहतूक खर्च",
-        code: "1",
-        vasuliType: "किलो प्रमाणे",
-        aakarani: "गाव स्तरावर",
-        rate: 1.5,
-        priority: 1,
-        rounding: true,
-        milkat: false,
-        kapatLock: false,
-      ),
-      Deduction(
-        adminId: '1',
-        name: "संघ सदस्यता शुल्क",
-        code: "2",
-        vasuliType: "सदस्य प्रमाणे",
-        aakarani: "संघ स्तरावर",
-        rate: 2.0,
-        priority: 2,
-        rounding: false,
-        milkat: true,
-        kapatLock: false,
-      ),
-      Deduction(
-        adminId: '1',
-        name: "दुध थंडकरण खर्च",
-        code: "3",
-        vasuliType: "लिटर प्रमाणे",
-        aakarani: "केंद्र स्तरावर",
-        rate: 0.75,
-        priority: 3,
-        rounding: true,
-        milkat: false,
-        kapatLock: true,
-      ),
-    ];
-
-    await isar.writeTxn(() async {
-      await isar.deductions.putAll(defaultDeductions);
-    });
-
+    await importDeduction(isar,'assets/data/deduction_data.json');
     print("✅ Initial deduction master data inserted");
   }
   else {
@@ -336,8 +298,6 @@ Future<ProviderContainer> initIsar() async {
 }
 
 
-// Load and insert MilkCollection data from assets/milk_collection.json
-
 Future<void> importMilkCollections(Isar isar) async {
   final String rawJson = await rootBundle.loadString('assets/data/filtered_output.json');
   final List<dynamic> decoded = jsonDecode(rawJson);
@@ -392,8 +352,6 @@ Future<void> importMilkCollections(Isar isar) async {
 
   print("✅ Import complete (inserted new + updated existing)");
 }
-
-
 
 Future<void> importCustomers(Isar isar) async {
   const jsonFilePath = 'assets/data/customer_data.json';
@@ -503,6 +461,37 @@ Future<void> importOpeningBalancesFromJson(Isar isar, String assetPath) async {
     print('[IMPORT] Import completed successfully.');
   } catch (e, st) {
     print('[ERROR] Failed to import OpeningBalance data: $e');
+    print(st);
+  }
+}
+Future<void> importDeduction(Isar isar, String assetPath) async {
+  try {
+    print('[IMPORT] Starting Deduction import from $assetPath');
+
+    // Load JSON file
+    final String jsonString = await rootBundle.loadString(assetPath);
+    final List<dynamic> jsonList = json.decode(jsonString);
+
+    print('[IMPORT] Loaded ${jsonList.length} raw records');
+
+    // Convert JSON → Model
+    final List<Deduction> deductionList = jsonList
+        .map((data) => Deduction.fromJson(data))
+        .toList();
+
+    print('[IMPORT] Converted to ${deductionList.length} Deduction objects');
+
+    // Write into Isar
+    print('[IMPORT] Writing ${deductionList.length} records to Isar...');
+
+    await isar.writeTxn(() async {
+      await isar.deductions.putAll(deductionList);
+    });
+
+    print('[IMPORT] Successfully inserted ${deductionList.length} deductions into Isar');
+
+  } catch (e, st) {
+    print('[ERROR] Failed to import Deduction data: $e');
     print(st);
   }
 }

@@ -18,11 +18,11 @@ void main() async {
     UncontrolledProviderScope(
       container: container,
       child: OKToast(  // ✅ Wrap MyApp inside OKToast
-        child: MyApp(),
         position: ToastPosition.bottom, // default toast position
         backgroundColor: Colors.black87,
         radius: 8.0,
-        textStyle: const TextStyle(fontSize: 16, color: Colors.white),
+        textStyle: const TextStyle(fontSize: 16, color: Colors.white),  // ✅ Wrap MyApp inside OKToast
+        child: MyApp(),
       ),
     ),
   );

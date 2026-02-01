@@ -38,11 +38,10 @@ class DeductionRepositoryIsar extends DeductionRepository {
     }
   }
 
-  @override
-  Future<int> insertDeduction(Deduction Deduction) async {
+  Future<int> insertDeduction(Deduction deduction) async {
     try {
       return await _isar.writeTxn<int>(() async {
-        return await _isar.deductions.put(Deduction);
+        return await _isar.deductions.put(deduction);
       });
     } catch (e) {
       print('[DeductionRepositoryIsar] insertDeduction error: $e');
